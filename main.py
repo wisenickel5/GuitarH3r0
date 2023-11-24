@@ -20,14 +20,13 @@ def normalize_text(s, sep_token=" \n "):
 
 openai_resource = "oa-research"
 
-## For Incontact use ic-oa-research
-## For Actimize  use act-oa-research
-
+# For Incontact use ic-oa-research
+# For Actimize  use act-oa-research
 
 model_for_completions = "text-davinci-003"
 model_for_embeddings = "text-embedding-ada-002"
-prompt = ("Thank you for calling nexidia heat and plumbing, how may i help you? \n "
-          "Hi, my waterheater is overflowing. \n"
+prompt = ("Thank you for calling Nexidia heat and plumbing, how may i help you? \n "
+          "Hi, my water-heater is overflowing. \n"
           " have you turned off water to the house? \n"
           " No, how do i do that?")
 
