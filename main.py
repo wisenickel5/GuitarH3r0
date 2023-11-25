@@ -1,4 +1,4 @@
-from openai import OpenAI
+from openai import AzureOpenAI
 import numpy as np
 import re
 import os
@@ -20,7 +20,7 @@ def normalize_text(s, sep_token=" \n "):
     return s
 
 
-def get_embedding(text: str, c: OpenAI, model="text-embedding-ada-002"):
+def get_embedding(text: str, c: AzureOpenAI, model="Guitar-H3r0-Embeddings"):
     text = normalize_text(text)
     response = c.embeddings.create(input=[text], model=model)
     return response['data'][0]['embedding']
@@ -44,7 +44,11 @@ def cosine_similarity(vec1, vec2):
 # Setup parameters
 api_key = os.getenv("AZURE_OPENAI_API_KEY")
 base_url = os.getenv("AZURE_OPENAI_ENDPOINT")
-client = OpenAI(api_key=api_key, base_url=base_url)
+client = AzureOpenAI(
+    api_version="2023-07-01-preview",
+    api_key=api_key,
+    azure_endpoint=base_url,
+)
 
 # Verify the OpenAI API can be accessed
 url = f"{base_url}/openai/deployments?api-version=2022-12-01"
@@ -58,21 +62,17 @@ messages = [
     {"role": "system", "content": "Have you turned off water to the house?"},
     {"role": "user", "content": "No, how do i do that?"},
 ]
-prompt = ["Thank you for calling Nexidia heat and plumbing, how may i help you?\n",
-          "Hi, my water-heater is overflowing.\n",
-          "Have you turned off water to the house?\n",
-          "No, how do i do that?"]
 # Generate the next best sentence
-next_best_sentence = client.completions.create(model="gpt-3.5-turbo", prompt=prompt)
+next_best_sentence = client.chat.completions.create(model="Guitar-H3r0-GPT-Turbo", messages=messages)
 
 # Two responses to compare to the one suggested by OpenAI:
 response_1 = "Do you know where your water meter is located?"
 response_2 = "In Louisiana, I like to eat Po-boy sandwiches"
 
 print("Conversation: \n", [x["content"] for x in messages])
-print("'Next-Best-Sentence' According to ChatGPT:\n", next_best_sentence.choices[0].message)
+print("'Next-Best-Sentence' According to ChatGPT:\n", next_best_sentence.choices[0].message.content)
 print("*Normalized* 'Next-Best-Sentence' According to ChatGPT:\n",
-      normalize_text(next_best_sentence.choices[0].message))
+      normalize_text(next_best_sentence.choices[0].message.content))
 
 # Generate Embeddings for sentences
 embedding_0 = get_embedding(next_best_sentence.choices[0].text, client)
