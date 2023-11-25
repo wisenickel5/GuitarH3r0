@@ -1,5 +1,7 @@
 aiohttp==3.8.5
 aiosignal==1.3.1
+annotated-types==0.6.0
+anyio==3.7.1
 async-timeout==4.0.3
 attrs==23.1.0
 azure-core==1.29.4
@@ -10,9 +12,14 @@ charset-normalizer==3.2.0
 contourpy==1.1.1
 cryptography==41.0.4
 cycler==0.11.0
+distro==1.8.0
 docopt==0.6.2
+exceptiongroup==1.2.0
 fonttools==4.42.1
 frozenlist==1.4.0
+h11==0.14.0
+httpcore==1.0.2
+httpx==0.25.2
 idna==3.4
 joblib==1.3.2
 kiwisolver==1.4.5
@@ -22,13 +29,15 @@ msal-extensions==1.0.0
 multidict==6.0.4
 num2words==0.5.12
 numpy==1.26.0
-openai==0.28.0
+openai==1.3.5
 packaging==23.1
 pandas==2.1.1
 Pillow==10.0.1
 plotly==5.17.0
 portalocker==2.8.2
 pycparser==2.21
+pydantic==2.5.2
+pydantic_core==2.14.5
 PyJWT==2.8.0
 pyparsing==3.1.1
 python-dateutil==2.8.2
@@ -38,6 +47,7 @@ requests==2.31.0
 scikit-learn==1.3.1
 scipy==1.11.2
 six==1.16.0
+sniffio==1.3.0
 tenacity==8.2.3
 threadpoolctl==3.2.0
 tiktoken==0.5.1

@@ -1,15 +1,18 @@
-import openai
-from openai.embeddings_utils import get_embedding, cosine_similarity
+from openai import OpenAI
+import numpy as np
 import re
 import os
 import requests
 
 
-# s is input text
 def normalize_text(s, sep_token=" \n "):
+    """
+    Removes redundant whitespace and cleans up the punctuation to prepare the data for tokenization
+    :parameter: s (str): Input Text
+    """
     s = re.sub(r'\s+', ' ', s).strip()
     s = re.sub(r". ,", "", s)
-    # remove all instances of multiple spaces
+    # Remove all instances of multiple spaces
     s = s.replace("..", ".")
     s = s.replace(". .", ".")
     s = s.replace("\n", "")
@@ -17,48 +20,70 @@ def normalize_text(s, sep_token=" \n "):
     return s
 
 
-# Prompting ChatGPT to come up with a response to someone calling about an overflowing water heater
-prompt = ("Thank you for calling Nexidia heat and plumbing, how may i help you? \n "
-          "Hi, my water-heater is overflowing. \n"
-          " have you turned off water to the house? \n"
-          " No, how do i do that?")
+def get_embedding(text: str, c: OpenAI, model="text-embedding-ada-002"):
+    text = normalize_text(text)
+    response = c.embeddings.create(input=[text], model=model)
+    return response['data'][0]['embedding']
+
+
+def cosine_similarity(vec1, vec2):
+    """
+    Calculate the cosine similarity between two vectors.
+    :parameter: vec1 (array): A numpy array representing the first vector.
+    :parameter: vec2 (array): A numpy array representing the second vector.
+
+    :return: float: cosine similarity between vec1 and vec2.
+    """
+    # Compute the dot product between the two vectors
+    dot_product = np.dot(vec1, vec2)
+    # Since OpenAI embeddings are normalized, the vectors' magnitudes are both 1,
+    # so we don't need to divide by the product of magnitudes.
+    return dot_product
+
 
 # Setup parameters
-openai.api_type = "azure"
-openai.api_key = API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
-openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
-openai.api_version = "2022-12-01"
+api_key = os.getenv("AZURE_OPENAI_API_KEY")
+base_url = os.getenv("AZURE_OPENAI_ENDPOINT")
+client = OpenAI(api_key=api_key, base_url=base_url)
 
 # Verify the OpenAI API can be accessed
-url = f"{openai.api_base}/openai/deployments?api-version=2022-12-01"
-r = requests.get(url, headers={"api-key": API_KEY})
+url = f"{base_url}/openai/deployments?api-version=2022-12-01"
+r = requests.get(url, headers={"api-key": api_key})
 print("Confirming that an entry for Embedding & Language models exist in API response:\n", r.text)
 
+# Prompting ChatGPT to come up with a response to someone calling about an overflowing water heater
+messages = [
+    {"role": "system", "content": "Thank you for calling Nexidia heat and plumbing, how may i help you?"},
+    {"role": "user", "content": "Hi, my water-heater is overflowing."},
+    {"role": "system", "content": "Have you turned off water to the house?"},
+    {"role": "user", "content": "No, how do i do that?"},
+]
+prompt = ["Thank you for calling Nexidia heat and plumbing, how may i help you?\n",
+          "Hi, my water-heater is overflowing.\n",
+          "Have you turned off water to the house?\n",
+          "No, how do i do that?"]
 # Generate the next best sentence
-model_for_completions = "gpt-35-turbo"
-next_best_sentence = openai.Completion.create(
-    engine=model_for_completions,
-    prompt=prompt
-)
-print(next_best_sentence.choices[0].text)
+next_best_sentence = client.completions.create(model="gpt-3.5-turbo", prompt=prompt)
 
-# Two responses to compare to the one suggested by openai:
-response_1 = "do you know where your water meter is located?"
-response_2 = "in lousiana, i like to eat poboy sandwiches"
+# Two responses to compare to the one suggested by OpenAI:
+response_1 = "Do you know where your water meter is located?"
+response_2 = "In Louisiana, I like to eat Po-boy sandwiches"
 
-print(prompt)
-print(normalize_text(next_best_sentence.choices[0].text))
+print("Conversation: \n", [x["content"] for x in messages])
+print("'Next-Best-Sentence' According to ChatGPT:\n", next_best_sentence.choices[0].message)
+print("*Normalized* 'Next-Best-Sentence' According to ChatGPT:\n",
+      normalize_text(next_best_sentence.choices[0].message))
 
 # Generate Embeddings for sentences
-model_for_embeddings = "text-embedding-ada-002"
-embedding_0 = get_embedding(normalize_text(next_best_sentence.choices[0].text), engine=model_for_embeddings)
-embedding_1 = get_embedding(normalize_text(response_1), engine=model_for_embeddings)
-embedding_2 = get_embedding(normalize_text(response_2), engine=model_for_embeddings)
+embedding_0 = get_embedding(next_best_sentence.choices[0].text, client)
+embedding_1 = get_embedding(response_1, client)
+embedding_2 = get_embedding(response_2, client)
 
+# Calculate distance between embeddings
 dist_0_0 = cosine_similarity(embedding_0, embedding_0)
 dist_0_1 = cosine_similarity(embedding_0, embedding_1)
 dist_0_2 = cosine_similarity(embedding_0, embedding_2)
 
-print(f'dist(em0,em0) = {dist_0_0:0.3}')
-print(f'dist(em0,em1) = {dist_0_1:0.3}')
-print(f'dist(em0,em2) = {dist_0_2:0.3}')
+print(f'Distance (em0,em0) = {dist_0_0:0.3}')
+print(f'Distance (em0,em1) = {dist_0_1:0.3}')
+print(f'Distance (em0,em2) = {dist_0_2:0.3}')
