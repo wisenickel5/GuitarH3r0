@@ -6,7 +6,7 @@ import pandas as pd
 
 from guitar_hero_utils import normalize_text, get_embedding, cosine_similarity
 from transcript_utils import (get_transcript_data, get_transcript_turns, create_transcript_subsets,
-                              convert_subsets_to_messages)
+                              extract_agent_responses, convert_subsets_to_messages)
 
 # Setup parameters to authenticate with OpenAI API
 api_key = os.getenv("AZURE_OPENAI_API_KEY")
@@ -27,25 +27,39 @@ transcript_path = Path('/Users/dylanalexander/Repos/GuitarH3r0/Call-Center-Trans
 transcript_df: pd.DataFrame = get_transcript_data(str(transcript_path))
 turns, speakers = get_transcript_turns(transcript_df)
 transcript_subsets = create_transcript_subsets(turns, speakers)
+actual_agent_responses = extract_agent_responses(transcript_subsets)
 all_transcript_messages = convert_subsets_to_messages(transcript_subsets)
 
-# Generate the next best sentence with ChatGPT
-for message, actual_agent_response in zip(all_transcript_messages, ):
+# Score-Tracking variables
+num_of_subsets = len(transcript_subsets)
+embedding_proximity_sum = 0
+
+# Iterate over all messages (transcript_subsets) and actual agent responses from the transcript
+for message, agent_response in zip(all_transcript_messages, actual_agent_responses):
+    # Generate the next best sentence with ChatGPT
     next_best_sentence = client.chat.completions.create(model="Guitar-H3r0-GPT-Turbo", messages=message)
 
-    print("\nConversation: \n", [x["content"] for x in message])
-    print("\nActual Agent Response: ", f'{actual_agent_response}')
+    print("\n\n***********************************************"
+          "\nActual Agent Response: ", f'{agent_response}')
     print("'Next-Best-Sentence' According to ChatGPT:\n", next_best_sentence.choices[0].message.content)
     print("*Normalized* 'Next-Best-Sentence' According to ChatGPT:\n",
           normalize_text(next_best_sentence.choices[0].message.content))
 
     # Generate Embeddings for sentences
     gpt_response_embedding = get_embedding(next_best_sentence.choices[0].message.content, client)
-    actual_agent_response_embedding = get_embedding(actual_agent_response, client)
+    actual_agent_response_embedding = get_embedding(agent_response, client)
 
     # Calculate distance between embeddings
-    dist_0_0 = cosine_similarity(gpt_response_embedding, gpt_response_embedding)
-    dist_0_1 = cosine_similarity(gpt_response_embedding, actual_agent_response_embedding)
-
-    print(f'\nDistance (gpt_response_embedding, gpt_response_embedding) = {dist_0_0:0.3}')
+    dist_0_1: float = cosine_similarity(gpt_response_embedding, actual_agent_response_embedding)
+    # NOTE: We are evaluating how effectively ChatGPT can replace an agent in a call center.
+    # A score close to 1 would mean that ChatGPT did a good job emulating what an
+    # agent would actually say in a Call Center.
     print(f'Distance (gpt_response_embedding, actual_agent_response_embedding) = {dist_0_1:0.3}')
+
+    embedding_proximity_sum += dist_0_1
+
+# Determine final score
+final_avg = embedding_proximity_sum / num_of_subsets
+print("\n\n****** Final Guitar H3r0 Score ******"
+      "\nFinal Score =  Embedding Proximity Sum / [# of subsets derived from transcript]"
+      f"\nFinal Score = {round(embedding_proximity_sum, 3)} / {round(num_of_subsets, 3)} = {round(final_avg, 3)}")

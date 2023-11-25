@@ -49,7 +49,7 @@ def get_transcript_turns(transcript_df: pd.DataFrame) -> Tuple[List[str], List[i
                                      original_exception=e) from e
 
 
-def create_transcript_subsets(phrases_per_turn: List[str], speaker_per_turn: List[int]) -> List[List[Tuple[str, int]]]:
+def create_transcript_subsets(phrases_per_turn: List[str], speaker_per_turn: List[int]):
     """
 
     :param phrases_per_turn:
@@ -59,29 +59,37 @@ def create_transcript_subsets(phrases_per_turn: List[str], speaker_per_turn: Lis
     # [Set of 5-6 turns, each subset of turns ends with the customer as the speaker.]
     # 5-6 turns should provide enough context in the conversation for ChatGPT to provide a reasonable response
     transcript_subsets = []
-    subset = []
+    subset = {"interaction": [], "actual_agent_response": None}
     counter = 0
     for turn, speaker in zip(phrases_per_turn, speaker_per_turn):
         if counter <= 4:
-            subset.append((turn, speaker))
+            subset["interaction"].append((turn, speaker))
             # If the last turn for this subset ends with the agent speaking, extend the count by 1
             if counter == 4 and speaker == 0:
                 # This ensures that all turn subsets will end with a customer response/request
                 counter -= 1
             counter += 1  # Increment counter
         else:
-            transcript_subsets.append(subset)
-            subset = [(turn, speaker)]  # Reset the subset array and fill it with this iterations turn
+            # This turn will always contain the agents response to the previous turn.
+            subset["actual_agent_response"] = turn
+            transcript_subsets.append(subset)  # A full subset was created, append it to the larger result
+            # Reset the subset array and fill it with this iterations turn
+            subset = {"interaction": [(turn, speaker)], "actual_agent_response": None}
             counter = 0  # Reset counter
 
     return transcript_subsets
 
 
-def convert_subsets_to_messages(transcript_subsets: List[List[Tuple[str, int]]]):
+def extract_agent_responses(transcript_subsets):
+    return [i["actual_agent_response"] for i in transcript_subsets]
+
+
+
+def convert_subsets_to_messages(transcript_subsets):
     all_transcript_messages = []
     for subset in transcript_subsets:
         subset_messages = []
-        for turn, speaker in subset:
+        for turn, speaker in subset['interaction']:
             if speaker == 0:
                 subset_messages.append({"role": "system", "content": turn})
             elif speaker == 1:
