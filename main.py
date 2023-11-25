@@ -1,11 +1,13 @@
 from openai import AzureOpenAI
+from openai.types import CreateEmbeddingResponse
 import numpy as np
 import re
 import os
 import requests
+from typing import List
 
 
-def normalize_text(s, sep_token=" \n "):
+def normalize_text(s, sep_token=" \n ") -> str:
     """
     Removes redundant whitespace and cleans up the punctuation to prepare the data for tokenization
     :parameter: s (str): Input Text
@@ -20,10 +22,10 @@ def normalize_text(s, sep_token=" \n "):
     return s
 
 
-def get_embedding(text: str, c: AzureOpenAI, model="Guitar-H3r0-Embeddings"):
+def get_embedding(text: str, c: AzureOpenAI, model="Guitar-H3r0-Embeddings") -> List[float]:
     text = normalize_text(text)
-    response = c.embeddings.create(input=[text], model=model)
-    return response['data'][0]['embedding']
+    response: CreateEmbeddingResponse = c.embeddings.create(input=[text], model=model)
+    return response.data[0].embedding
 
 
 def cosine_similarity(vec1, vec2):
@@ -47,7 +49,7 @@ base_url = os.getenv("AZURE_OPENAI_ENDPOINT")
 client = AzureOpenAI(
     api_version="2023-07-01-preview",
     api_key=api_key,
-    azure_endpoint=base_url,
+    azure_endpoint=base_url
 )
 
 # Verify the OpenAI API can be accessed
@@ -75,7 +77,7 @@ print("*Normalized* 'Next-Best-Sentence' According to ChatGPT:\n",
       normalize_text(next_best_sentence.choices[0].message.content))
 
 # Generate Embeddings for sentences
-embedding_0 = get_embedding(next_best_sentence.choices[0].text, client)
+embedding_0 = get_embedding(next_best_sentence.choices[0].message.content, client)
 embedding_1 = get_embedding(response_1, client)
 embedding_2 = get_embedding(response_2, client)
 
