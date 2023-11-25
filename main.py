@@ -7,28 +7,64 @@ import requests
 from typing import List
 
 
-def normalize_text(s, sep_token=" \n ") -> str:
+def normalize_text(s: str, sep_token: str = " \n ") -> str:
     """
-    Removes redundant whitespace and cleans up the punctuation to prepare the data for tokenization
-    :parameter: s (str): Input Text
+    Normalizes the input text by removing extra whitespace and correcting punctuation.
+
+    This function is typically used to prepare text data for NLP tasks like tokenization
+    or embedding generation.
+
+    :parameter s: The text to normalize.
+    :parameter sep_token: A separator token used for joining text segments, defaulted to a space followed by a newline.
+
+    :return: The normalized text string.
+
+    The function applies several regular expressions and string operations to clean up the text:
+    - Collapses multiple whitespace characters into a single space.
+    - Removes any occurrences of a space followed by a comma.
+    - Replaces instances of double periods or spaced periods with a single period.
+    - Strips leading and trailing whitespace characters.
     """
+
+    # Collapse one or more whitespace characters into a single space and strip leading/trailing spaces.
     s = re.sub(r'\s+', ' ', s).strip()
-    s = re.sub(r". ,", "", s)
-    # Remove all instances of multiple spaces
-    s = s.replace("..", ".")
-    s = s.replace(". .", ".")
-    s = s.replace("\n", "")
-    s = s.strip()
+    # Remove occurrences of a space followed by a comma, which is typically a punctuation error.
+    s = re.sub(r"\s+,", ",", s)
+    # Replace instances of double periods or spaced periods with a single period.
+    s = s.replace("..", ".").replace(". .", ".")
+    # Remove newline characters and any additional whitespace that may have been added.
+    s = s.replace(sep_token, " ").strip()
     return s
 
 
 def get_embedding(text: str, c: AzureOpenAI, model="Guitar-H3r0-Embeddings") -> List[float]:
+    """
+    Retrieve an embedding for the given text using Azure's OpenAI service.
+
+    :parameter text: The input text string to be converted into an embedding.
+    :parameter c: An instantiated AzureOpenAI client configured to communicate with the OpenAI service.
+    :parameter model: The model identifier for the deployed embedding model to use.
+
+    :return: A list of floating-point numbers representing the text embedding.
+
+    The function normalizes the input text by removing redundant whitespace and
+    unnecessary punctuation, then requests the OpenAI API to create an embedding
+    for the processed text. It returns the embedding as a list of floats.
+    """
+
+    # Normalize the input text to remove redundant spaces and fix punctuation.
     text = normalize_text(text)
+
+    # Call the OpenAI API to create an embedding for the normalized text.
+    # 'model' should correspond to a valid deployment model identifier.
     response: CreateEmbeddingResponse = c.embeddings.create(input=[text], model=model)
+
+    # Return the embedding from the API response.
+    # The API returns a list of embeddings; we take the first one since we provided a single input.
     return response.data[0].embedding
 
 
-def cosine_similarity(vec1, vec2):
+def cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
     """
     Calculate the cosine similarity between two vectors.
     :parameter: vec1 (array): A numpy array representing the first vector.
@@ -67,25 +103,27 @@ messages = [
 # Generate the next best sentence
 next_best_sentence = client.chat.completions.create(model="Guitar-H3r0-GPT-Turbo", messages=messages)
 
-# Two responses to compare to the one suggested by OpenAI:
+# Two responses to compare to the one suggested by ChatGPT:
 response_1 = "Do you know where your water meter is located?"
 response_2 = "In Louisiana, I like to eat Po-boy sandwiches"
 
-print("Conversation: \n", [x["content"] for x in messages])
+print("\nConversation: \n", [x["content"] for x in messages])
+print("\nSample Response 1: ", f'{response_1}')
+print("Sample Response 2: ", f'{response_2}\n')
 print("'Next-Best-Sentence' According to ChatGPT:\n", next_best_sentence.choices[0].message.content)
 print("*Normalized* 'Next-Best-Sentence' According to ChatGPT:\n",
       normalize_text(next_best_sentence.choices[0].message.content))
 
 # Generate Embeddings for sentences
-embedding_0 = get_embedding(next_best_sentence.choices[0].message.content, client)
-embedding_1 = get_embedding(response_1, client)
-embedding_2 = get_embedding(response_2, client)
+gpt_response_embedding = get_embedding(next_best_sentence.choices[0].message.content, client)
+response_one_embedding = get_embedding(response_1, client)
+response_two_embedding = get_embedding(response_2, client)
 
 # Calculate distance between embeddings
-dist_0_0 = cosine_similarity(embedding_0, embedding_0)
-dist_0_1 = cosine_similarity(embedding_0, embedding_1)
-dist_0_2 = cosine_similarity(embedding_0, embedding_2)
+dist_0_0 = cosine_similarity(gpt_response_embedding, gpt_response_embedding)
+dist_0_1 = cosine_similarity(gpt_response_embedding, response_one_embedding)
+dist_0_2 = cosine_similarity(gpt_response_embedding, response_two_embedding)
 
-print(f'Distance (em0,em0) = {dist_0_0:0.3}')
-print(f'Distance (em0,em1) = {dist_0_1:0.3}')
-print(f'Distance (em0,em2) = {dist_0_2:0.3}')
+print(f'\nDistance (gpt_response_embedding, gpt_response_embedding) = {dist_0_0:0.3}')
+print(f'Distance (gpt_response_embedding, response_one_embedding) = {dist_0_1:0.3}')
+print(f'Distance (gpt_response_embedding, response_two_embedding) = {dist_0_2:0.3}')
