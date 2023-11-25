@@ -1,8 +1,8 @@
-from azure.identity import DefaultAzureCredential
 import openai
 from openai.embeddings_utils import get_embedding, cosine_similarity
 import re
-import tiktoken
+import os
+import requests
 
 
 # s is input text
@@ -14,46 +14,43 @@ def normalize_text(s, sep_token=" \n "):
     s = s.replace(". .", ".")
     s = s.replace("\n", "")
     s = s.strip()
-
     return s
 
 
-openai_resource = "oa-research"
-
-# For Incontact use ic-oa-research
-# For Actimize  use act-oa-research
-
-model_for_completions = "text-davinci-003"
-model_for_embeddings = "text-embedding-ada-002"
+# Prompting ChatGPT to come up with a response to someone calling about an overflowing water heater
 prompt = ("Thank you for calling Nexidia heat and plumbing, how may i help you? \n "
           "Hi, my water-heater is overflowing. \n"
           " have you turned off water to the house? \n"
           " No, how do i do that?")
 
-# Request credential
-default_credential = DefaultAzureCredential(exclude_shared_token_cache_credential=True)
-token = default_credential.get_token("https://cognitiveservices.azure.com/.default",
-                                     exclude_shared_token_cache_credential=True)
-
 # Setup parameters
-openai.api_type = "azure_ad"
-openai.api_key = token.token
-openai.api_base = "https://{0}.openai.azure.com/".format(openai_resource)
-openai.api_version = "2023-05-15"
-tokenizer = tiktoken.get_encoding("cl100k_base")
+openai.api_type = "azure"
+openai.api_key = API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
+openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
+openai.api_version = "2022-12-01"
+
+# Verify the OpenAI API can be accessed
+url = f"{openai.api_base}/openai/deployments?api-version=2022-12-01"
+r = requests.get(url, headers={"api-key": API_KEY})
+print("Confirming that an entry for Embedding & Language models exist in API response:\n", r.text)
+
+# Generate the next best sentence
+model_for_completions = "gpt-35-turbo"
 next_best_sentence = openai.Completion.create(
     engine=model_for_completions,
     prompt=prompt
 )
-
 print(next_best_sentence.choices[0].text)
-# two responses to compare to the one suggested by openai:
+
+# Two responses to compare to the one suggested by openai:
 response_1 = "do you know where your water meter is located?"
 response_2 = "in lousiana, i like to eat poboy sandwiches"
 
 print(prompt)
 print(normalize_text(next_best_sentence.choices[0].text))
 
+# Generate Embeddings for sentences
+model_for_embeddings = "text-embedding-ada-002"
 embedding_0 = get_embedding(normalize_text(next_best_sentence.choices[0].text), engine=model_for_embeddings)
 embedding_1 = get_embedding(normalize_text(response_1), engine=model_for_embeddings)
 embedding_2 = get_embedding(normalize_text(response_2), engine=model_for_embeddings)
