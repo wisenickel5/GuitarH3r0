@@ -1,0 +1,20 @@
+# These two lists are zipped and iterated upon
+
+# all_transcript_interactions
+[
+    [
+        # One interaction consists of 5-6 turns that always ends in a customer request.
+        {'content': 'NEED ANOTHER IP ADDRESS TO SEND IN THE RESET CODE', 'role': 'user},
+        {'content': 'HI THERE LETS PULL UP THE ACCOUNT...', 'role': 'system'},
+        {'content': 'CHRISTOPHER GRAHAM MY ADDRESS IS...', 'role': 'user'},
+        {'content': 'ONE MOMENT PLEASE', 'role': 'system'},
+        {'content': 'OK', 'role': 'user'}
+    ],
+    # The rest of the interactions from the transcript...
+]
+
+# actual_agent_responses
+[
+    'THANK YOU FOR PATIENTLY WAITING WE WILL BE NEEDING TO MAKE SURE THAT...',
+    # The rest of the agent's actual responses from the transcript...
+]

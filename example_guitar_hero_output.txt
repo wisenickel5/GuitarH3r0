@@ -1,0 +1,176 @@
+/Users/dylanalexander/Repos/GuitarH3r0/venv/bin/python /Users/dylanalexander/Repos/GuitarH3r0/GuitarHeroCLI.py
+Confirming that an entry for Embedding & Language models exist in API response:
+ {
+  "data": [
+    {
+      "scale_settings": {
+        "scale_type": "standard"
+      },
+      "model": "text-embedding-ada-002",
+      "owner": "organization-owner",
+      "id": "Guitar-H3r0-Embeddings",
+      "status": "succeeded",
+      "created_at": 1700864868,
+      "updated_at": 1700870612,
+      "object": "deployment"
+    },
+    {
+      "scale_settings": {
+        "scale_type": "standard"
+      },
+      "model": "gpt-35-turbo",
+      "owner": "organization-owner",
+      "id": "Guitar-H3r0-GPT-Turbo",
+      "status": "succeeded",
+      "created_at": 1700871336,
+      "updated_at": 1700871336,
+      "object": "deployment"
+    },
+    {
+      "scale_settings": {
+        "scale_type": "standard"
+      },
+      "model": "gpt-35-turbo-instruct",
+      "owner": "organization-owner",
+      "id": "Guitar-H3r0-GPT-Turbo-Instruct",
+      "status": "succeeded",
+      "created_at": 1700918244,
+      "updated_at": 1700918244,
+      "object": "deployment"
+    }
+  ],
+  "object": "list"
+}
+
+
+***********************************************
+Actual Agent Response:  THANK YOU FOR PATIENTLY WAITING WE WILL BE NEEDING TO MAKE SURE THAT YOU ARE CONNECTED TO YOUR IN HOME WIFI AS WELL WHAT IS THE USERNAME OF THE ACCOUNT YOU ARE TRYING TO ACCESS
+'Next-Best-Sentence' According to ChatGPT:
+ Thank you for the information, Christopher. To clarify, are you still having trouble resetting your password because you need another IP address to receive the reset code?
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ Thank you for the information, Christopher. To clarify, are you still having trouble resetting your password because you need another IP address to receive the reset code?
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.781
+
+
+***********************************************
+Actual Agent Response:  OH DO YOU HAVE THE ACCOUNT NUMBER HANDY
+'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry for the confusion. May I know what service or website you are trying to access with the username "KFGR80"?
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry for the confusion. May I know what service or website you are trying to access with the username "KFGR80"?
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.751
+
+
+***********************************************
+Actual Agent Response:  YES THAT WILL BE GREAT AS FOR THE LOGINS OF THE ACCOUNT WE DO HAVE A DEDICATED TEAM THAT CAN ASSIST YOU ON THIS NO NEED TO YOU TO REPEAT YOURSELF JUST TO SET PROPER EXPECTATIONS YOU HAVE REACHED THE RIGHT DEPARTMENT THAT CAN HELP YOU ON THIS AS FOR THE PASSWORD I CAN HAVE THEM ASSIGNED SHALL WE GO AHEAD AND CALL THEM AT THIS NUMBER 1 888 565 4329
+'Next-Best-Sentence' According to ChatGPT:
+ NO, YOU DON'T HAVE TO START ALL OVER AGAIN. ONCE YOU SIGN IN WITH YOUR AMERICA PHONE SERVICE USERNAME, YOU WILL BE ABLE TO ACCESS YOUR ACCOUNT AS YOU DID BEFORE. THE ONLY DIFFERENCE IS THE EMAIL ADDRESS ASSOCIATED WITH YOUR ACCOUNT HAS BEEN UPDATED.
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ NO, YOU DON'T HAVE TO START ALL OVER AGAIN. ONCE YOU SIGN IN WITH YOUR AMERICA PHONE SERVICE USERNAME, YOU WILL BE ABLE TO ACCESS YOUR ACCOUNT AS YOU DID BEFORE. THE ONLY DIFFERENCE IS THE EMAIL ADDRESS ASSOCIATED WITH YOUR ACCOUNT HAS BEEN UPDATED.
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.838
+
+
+***********************************************
+Actual Agent Response:  LET ME TO CONNECT THIS IS DONE I APPRECIATE YOUR ASSISTANCE AND THANK YOU FOR BEING A PHONE NUMBER IN RESOLVING YOUR COOPERATION AND HAVE THE ACCOUNT NUMBER THANK YOU HAVE A GREAT CHAT CONVERSATION BY THE NUMBER THANKS I NEED TO CALL THANK YOU WILL HAVE A CHANCE TO MAKE SURE I JUST PRESS 9161167
+'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry, I don't quite understand. Could you please provide more information or clarify your request?
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry, I don't quite understand. Could you please provide more information or clarify your request?
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.731
+
+
+***********************************************
+Actual Agent Response:  HAPPY THANKSGIVING HAPPY THANKSGIVING TAKE CARE
+'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry, I don't understand what you are trying to say. Could you please clarify?
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry, I don't understand what you are trying to say. Could you please clarify?
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.722
+
+
+***********************************************
+Actual Agent Response:  IF YOU ENJOY YOUR TIME
+'Next-Best-Sentence' According to ChatGPT:
+ THANK YOU! HAPPY THANKSGIVING TO YOU TOO! ENJOY THE DAY WITH YOUR FAMILY AND FRIENDS, AND MAY YOUR CELEBRATION BE FULL OF HAPPINESS AND GRATITUDE.
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ THANK YOU! HAPPY THANKSGIVING TO YOU TOO! ENJOY THE DAY WITH YOUR FAMILY AND FRIENDS, AND MAY YOUR CELEBRATION BE FULL OF HAPPINESS AND GRATITUDE.
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.796
+
+
+***********************************************
+Actual Agent Response:  BYE BYE
+'Next-Best-Sentence' According to ChatGPT:
+ Thank you for interacting with me. It was a pleasure helping you. Have a great day ahead!
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ Thank you for interacting with me. It was a pleasure helping you. Have a great day ahead!
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.759
+
+
+***********************************************
+Actual Agent Response:  THANK YOU FOR PATIENTLY WAITING WE WILL BE NEEDING TO MAKE SURE THAT YOU ARE CONNECTED TO YOUR IN HOME WIFI AS WELL WHAT IS THE USERNAME OF THE ACCOUNT YOU ARE TRYING TO ACCESS
+'Next-Best-Sentence' According to ChatGPT:
+ Hi Christopher, can you provide me with the email address associated with your account that needs the password reset?
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ Hi Christopher, can you provide me with the email address associated with your account that needs the password reset?
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.761
+
+
+***********************************************
+Actual Agent Response:  OH DO YOU HAVE THE ACCOUNT NUMBER HANDY
+'Next-Best-Sentence' According to ChatGPT:
+ No worries. Can you please provide your complete name and the full address of the service location so we can look up the account for you?
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ No worries. Can you please provide your complete name and the full address of the service location so we can look up the account for you?
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.8
+
+
+***********************************************
+Actual Agent Response:  YES THAT WILL BE GREAT AS FOR THE LOGINS OF THE ACCOUNT WE DO HAVE A DEDICATED TEAM THAT CAN ASSIST YOU ON THIS NO NEED TO YOU TO REPEAT YOURSELF JUST TO SET PROPER EXPECTATIONS YOU HAVE REACHED THE RIGHT DEPARTMENT THAT CAN HELP YOU ON THIS AS FOR THE PASSWORD I CAN HAVE THEM ASSIGNED SHALL WE GO AHEAD AND CALL THEM AT THIS NUMBER 1 888 565 4329
+'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry, I'm not sure I fully understand your question. Could you please clarify?
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry, I'm not sure I fully understand your question. Could you please clarify?
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.715
+
+
+***********************************************
+Actual Agent Response:  LET ME TO CONNECT THIS IS DONE I APPRECIATE YOUR ASSISTANCE AND THANK YOU FOR BEING A PHONE NUMBER IN RESOLVING YOUR COOPERATION AND HAVE THE ACCOUNT NUMBER THANK YOU HAVE A GREAT CHAT CONVERSATION BY THE NUMBER THANKS I NEED TO CALL THANK YOU WILL HAVE A CHANCE TO MAKE SURE I JUST PRESS 9161167
+'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry, but I don't understand your message. Could you please rephrase it or provide more details about what you would like me to do?
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ I'm sorry, but I don't understand your message. Could you please rephrase it or provide more details about what you would like me to do?
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.737
+
+
+***********************************************
+Actual Agent Response:  HAPPY THANKSGIVING HAPPY THANKSGIVING TAKE CARE
+'Next-Best-Sentence' According to ChatGPT:
+ You too! Have a great day!
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ You too! Have a great day!
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.779
+
+
+***********************************************
+Actual Agent Response:  IF YOU ENJOY YOUR TIME
+'Next-Best-Sentence' According to ChatGPT:
+ THANK YOU! WISHING YOU A JOYFUL THANKSGIVING AS WELL! ENJOY THE FESTIVITIES AND SPENDING TIME WITH LOVED ONES.
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ THANK YOU! WISHING YOU A JOYFUL THANKSGIVING AS WELL! ENJOY THE FESTIVITIES AND SPENDING TIME WITH LOVED ONES.
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.808
+
+
+***********************************************
+Actual Agent Response:  BYE BYE
+'Next-Best-Sentence' According to ChatGPT:
+ SURE! THANK YOU FOR CHATTING WITH ME AND HAVE A GREAT DAY AHEAD! GOODBYE!
+*Normalized* 'Next-Best-Sentence' According to ChatGPT:
+ SURE! THANK YOU FOR CHATTING WITH ME AND HAVE A GREAT DAY AHEAD! GOODBYE!
+Distance (gpt_response_embedding, actual_agent_response_embedding) = 0.84
+
+
+****** Final Guitar H3r0 Score ******
+Final Score =  Embedding Proximity Sum / [# of subsets derived from transcript]
+Final Score = 10.816 / 14 = 0.773
+
+Process finished with exit code 0
